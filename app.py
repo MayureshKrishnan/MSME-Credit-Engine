@@ -142,7 +142,7 @@ with left_col:
     
     st.markdown('</div>', unsafe_allow_html=True)
     
-    # Process inputs mapping structures
+    # 4. Handle context adaptation mappings back to the model's training variables
     sector_mapping = {
         "Infrastructure / Heavy Industry": 12.4,
         "Textiles / Manufacturing": 9.2,
@@ -151,15 +151,20 @@ with left_col:
         "Agriculture & Allied Activities": 8.4
     }
     rbi_sector_gnpa_pct = sector_mapping[sector_selection]
-    credit_amount_dm = loan_amount_inr / 28
+
+    # Re-calculate on-the-fly interactive Engineered Features
     debt_burden_score = installment_income_pct * duration_months
     age_to_tenure_ratio = age_years / duration_months
     
+    # 5. Assemble data payload matches the NEW feature array layout (NO credit_amount_DM)
     input_data = {
-        "duration_months": duration_months, "credit_amount_DM": credit_amount_dm,
-        "installment_income_pct": installment_income_pct, "age_years": age_years,
-        "loan_amount_INR": loan_amount_inr, "rbi_sector_gnpa_pct": rbi_sector_gnpa_pct,
-        "debt_burden_score": debt_burden_score, "age_to_tenure_ratio": age_to_tenure_ratio
+        "duration_months": duration_months,
+        "installment_income_pct": installment_income_pct,
+        "age_years": age_years,
+        "loan_amount_INR": loan_amount_inr,
+        "rbi_sector_gnpa_pct": rbi_sector_gnpa_pct,
+        "debt_burden_score": debt_burden_score,
+        "age_to_tenure_ratio": age_to_tenure_ratio
     }
     input_df = pd.DataFrame([input_data])[model_features]
     
